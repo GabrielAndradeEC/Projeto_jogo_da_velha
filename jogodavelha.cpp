@@ -74,7 +74,7 @@ void liberaTabuleiro(char** tabuleiro, int tamanho) {
 
 // Função para exibir o menu
 void exibeMenu() {
-    printf("Escolha uma opção:\n");
+    printf("Bem-vindo ao Jogo da velha, por favor selecione uma opção:\n");
     printf("1. Jogar\n");
     printf("2. Créditos\n");
     printf("3. Finalizar Operação\n\n");
