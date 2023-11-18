@@ -1,14 +1,17 @@
 #include <stdio.h>
-#include <locale.h>
+#include <stdlib.h>
 
-setlocale("0, Portuguese");
+// Função para imprimir o tabuleiro
+void imprimeTabuleiro(char** tabuleiro, int tamanho) {
+    printf("  ");
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d ", i + 1);
+    }
+    printf("\n");
 
-// Fun��o para imprimir o tabuleiro
-void imprimeTabuleiro(char tabuleiro[3][3]) {
-    printf("  0 1 2\n");
-    for (int i = 0; i < 3; i++) {
-        printf("%d ", i);
-        for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d ", i + 1);
+        for (int j = 0; j < tamanho; j++) {
             printf("%c ", tabuleiro[i][j]);
         }
         printf("\n");
@@ -16,10 +19,9 @@ void imprimeTabuleiro(char tabuleiro[3][3]) {
     printf("\n");
 }
 
-// Fun��o para verificar se h� um vencedor
-char verificaVencedor(char tabuleiro[3][3]) {
-    // Verificar linhas e colunas
-    for (int i = 0; i < 3; i++) {
+// Função para verificar se há um vencedor
+char verificaVencedor(char** tabuleiro, int tamanho) {
+    for (int i = 0; i < tamanho; i++) {
         if (tabuleiro[i][0] == tabuleiro[i][1] && tabuleiro[i][1] == tabuleiro[i][2] && tabuleiro[i][0] != ' ') {
             return tabuleiro[i][0]; // Vencedor na linha i
         }
@@ -28,70 +30,123 @@ char verificaVencedor(char tabuleiro[3][3]) {
         }
     }
 
-    // Verificar diagonais
     if (tabuleiro[0][0] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][2] && tabuleiro[0][0] != ' ') {
         return tabuleiro[0][0]; // Vencedor na diagonal principal
     }
     if (tabuleiro[0][2] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][0] && tabuleiro[0][2] != ' ') {
-        return tabuleiro[0][2]; // Vencedor na diagonal secund�ria
+        return tabuleiro[0][2]; // Vencedor na diagonal secundária
     }
 
     return ' '; // Nenhum vencedor ainda
 }
 
-// Fun��o para verificar se o tabuleiro est� cheio (empate)
-int tabuleiroCheio(char tabuleiro[3][3]) {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+// Função para verificar se o tabuleiro está cheio (empate)
+int tabuleiroCheio(char** tabuleiro, int tamanho) {
+    for (int i = 0; i < tamanho; i++) {
+        for (int j = 0; j < tamanho; j++) {
             if (tabuleiro[i][j] == ' ') {
-                return 0; // Ainda h� espa�o vazio
+                return 0; // Ainda há espaço vazio
             }
         }
     }
     return 1; // Tabuleiro cheio (empate)
 }
 
+// Função para criar um tabuleiro dinâmico
+char** criaTabuleiro(int tamanho) {
+    char** tabuleiro = (char**)malloc(tamanho * sizeof(char*));
+    for (int i = 0; i < tamanho; i++) {
+        tabuleiro[i] = (char*)malloc(tamanho * sizeof(char));
+        for (int j = 0; j < tamanho; j++) {
+            tabuleiro[i][j] = ' ';
+        }
+    }
+    return tabuleiro;
+}
+
+// Função para liberar a memória do tabuleiro dinâmico
+void liberaTabuleiro(char** tabuleiro, int tamanho) {
+    for (int i = 0; i < tamanho; i++) {
+        free(tabuleiro[i]);
+    }
+    free(tabuleiro);
+}
+
+// Função para exibir o menu
+void exibeMenu() {
+    printf("Escolha uma opção:\n");
+    printf("1. Jogar\n");
+    printf("2. Créditos\n");
+    printf("3. Finalizar Operação\n\n");
+}
+
 int main() {
-    char tabuleiro[3][3] = {{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+    int tamanho = 3;
+    char** tabuleiro = criaTabuleiro(tamanho);
     int linha, coluna;
     char jogador = 'X';
+    int escolha;
 
     do {
-        imprimeTabuleiro(tabuleiro);
+        exibeMenu();
+        scanf("%d", &escolha);
 
-        // Solicita a jogada do jogador atual
-        printf("Jogador %c, insira a linha e a coluna (0-2) separadas por espa�o: ", jogador);
-        scanf("%d %d", &linha, &coluna);
+        switch (escolha) {
+            case 1:
+                // Loop do jogo da velha
+                do {
+                    imprimeTabuleiro(tabuleiro, tamanho);
 
-        // Verifica se a jogada � v�lida
-        if (linha < 0 || linha >= 3 || coluna < 0 || coluna >= 3 || tabuleiro[linha][coluna] != ' ') {
-            printf("Jogada inv�lida. Tente novamente.\n");
-            continue;
+                    // Solicita a jogada do jogador atual
+                    printf("Jogador %c, insira a linha e a coluna (1-3) separadas por espaço: ", jogador);
+                    scanf("%d %d", &linha, &coluna);
+
+                    // Convertendo de 1 a 3 para 0 a 2
+                    linha--;
+                    coluna--;
+
+                    // Verifica se a jogada é válida
+                    if (linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho || tabuleiro[linha][coluna] != ' ') {
+                        printf("Jogada inválida. Tente novamente.\n");
+                        continue;
+                    }
+
+                    // Atualiza o tabuleiro com a jogada
+                    tabuleiro[linha][coluna] = jogador;
+
+                    // Verifica se há um vencedor
+                    char vencedor = verificaVencedor(tabuleiro, tamanho);
+                    if (vencedor != ' ') {
+                        imprimeTabuleiro(tabuleiro, tamanho);
+                        printf("Jogador %c venceu!\n\n", vencedor);
+                        break;
+                    }
+
+                    // Verifica se o tabuleiro está cheio (empate)
+                    if (tabuleiroCheio(tabuleiro, tamanho)) {
+                        imprimeTabuleiro(tabuleiro, tamanho);
+                        printf("Empate! O jogo terminou sem vencedor.\n");
+                        break;
+                    }
+
+                    // Alterna para o próximo jogador
+                    jogador = (jogador == 'X') ? 'O' : 'X';
+
+                } while (1); // Loop do jogo
+                break;
+            case 2:
+                printf("Créditos:\n");
+                printf("Desenvolvido por: \n-Gabriel de andrade \n-Julio Oliveira \n-Dyego Almeida \n-Juan Domingos \n\n");
+                break;
+            case 3:
+                printf("Operação finalizada. Muito obrigado!\n");
+                liberaTabuleiro(tabuleiro, tamanho);
+                return 0; // Sair do programa
+            default:
+                printf("Opção inválida. Tente novamente.\n");
         }
 
-        // Atualiza o tabuleiro com a jogada
-        tabuleiro[linha][coluna] = jogador;
-
-        // Verifica se h� um vencedor
-        char vencedor = verificaVencedor(tabuleiro);
-        if (vencedor != ' ') {
-            imprimeTabuleiro(tabuleiro);
-            printf("Jogador %c venceu!\n", vencedor);
-            break;
-        }
-
-        // Verifica se o tabuleiro est� cheio (empate)
-        if (tabuleiroCheio(tabuleiro)) {
-            imprimeTabuleiro(tabuleiro);
-            printf("Empate! O jogo terminou sem vencedor.\n");
-            break;
-        }
-
-        // Alterna para o pr�ximo jogador
-        jogador = (jogador == 'X') ? 'O' : 'X';
-
-    } while (1); // Loop infinito (o jogo continua at� que haja um vencedor ou empate)
+    } while (1); // Loop do menu
 
     return 0;
 }
-
