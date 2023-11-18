@@ -6,5 +6,6 @@ Requisitos:
 -relatório
 -tabuleiro 3x3 (feito)
 -dois jogadores (feito)
--menu
--matriz e alocação dinâmica
+-menu (feito)
+-matriz e alocação dinâmica (feito)
+-ranking
