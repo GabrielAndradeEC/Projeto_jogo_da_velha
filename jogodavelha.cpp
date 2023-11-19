@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 
 // Função para imprimir o tabuleiro
 void imprimeTabuleiro(char** tabuleiro, int tamanho) {
@@ -86,6 +87,8 @@ int main() {
     int linha, coluna;
     char jogador = 'X';
     int escolha;
+
+	setlocale(LC_ALL, "Portuguese_Brazil.1252");
 
     do {
         exibeMenu();
