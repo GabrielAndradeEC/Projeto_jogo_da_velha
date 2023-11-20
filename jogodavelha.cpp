@@ -1,4 +1,4 @@
-/*O código implementa um jogo da velha em C. Os jogadores ('X' e 'O') alternam turnos,
+/*O código implementa um jogo da velha em C. Os jogadores ('X' e 'O') alternam turnos,	
 inserindo suas jogadas em um tabuleiro 3x3. O jogo verifica vitória em linhas, colunas e diagonais.
 Há opções no menu para jogar, ver créditos ou finalizar o jogo.
 O código é modular e utiliza alocação dinâmica de memória para o tabuleiro.*/
@@ -88,6 +88,12 @@ void exibeMenu() {
     printf("3. Finalizar Operação\n\n");
 }
 
+//Função para reiniciar o jogo
+void reiniciaJogo(char*** tabuleiro, int tamanho) {
+    liberaTabuleiro(*tabuleiro, tamanho); // Libera a memória do tabuleiro atual
+    *tabuleiro = criaTabuleiro(tamanho); // Cria um novo tabuleiro
+}
+
 int main() {
     int tamanho = 3;
     char** tabuleiro = criaTabuleiro(tamanho);
@@ -129,6 +135,7 @@ int main() {
                     if (vencedor != ' ') {
                         imprimeTabuleiro(tabuleiro, tamanho);
                         printf("Jogador %c venceu!\n\n", vencedor);
+                        reiniciaJogo(&tabuleiro, tamanho); // Reinicia o jogo
                         break;
                     }
 
@@ -136,6 +143,7 @@ int main() {
                     if (tabuleiroCheio(tabuleiro, tamanho)) {
                         imprimeTabuleiro(tabuleiro, tamanho);
                         printf("Empate! O jogo terminou sem vencedor.\n");
+                        reiniciaJogo(&tabuleiro, tamanho); // Reinicia o jogo
                         break;
                     }
 
