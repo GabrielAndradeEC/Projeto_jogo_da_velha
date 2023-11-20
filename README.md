@@ -3,7 +3,7 @@ Jogo da velha do projeto da disciplina: Técnicas de desenvolvimento de algoritm
 Unipê P2B
 
 Requisitos:
--vídeo
+-vídeo https://youtu.be/Y38W5Hhibug (link do vídeo de apresentação)
 -tabuleiro 3x3 (feito)
 -dois jogadores (feito)
 -menu (feito)
